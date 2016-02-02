@@ -196,12 +196,12 @@ manageHiScores (int update)
                            300, 0, 100, 200);
           SDL_Flip (screen);
 
-          /* Gestion des événements */
+          /* [GT] Event management */
           while (SDL_PollEvent (&event_list))
             {
               switch (event_list.type)
                 {
-                  /* si touche enfoncée */
+                  /* [GT] If key pressed */
                 case SDL_KEYDOWN:
                   switch (event_list.key.keysym.unicode)
                     {
@@ -911,7 +911,7 @@ manageGame (void)
       /* clear screen */
       clearBoard (screen);
 
-/* PARTIE GESTION */
+/* [GT] MANAGEMENT PORTION */
 
       if (apparition && first == 0 && player.life > 0
           && strcmp (cfg_animation, "on") == 0)
@@ -931,7 +931,7 @@ manageGame (void)
           NewTick += delta_time;
           delta_time = 17;
         }
-      /* Gere les appuis sur le clavier et la souris */
+      /* [GT] Gere(?) supports the keyboard and mouse */
       manageKeys ();
 
       /* event handle */
@@ -1099,25 +1099,25 @@ manageEvents ()
     }
 #endif
 
-  /* Si on demande à lancer le cable, que ce dernier n'est pas encore lancé et que l'on est sur un sol quelconque */
+  /* [GT] If asked to run the cable, the latter has not yet started and that one is on any ground */
   if (event[EVENT_PRESSEDCABLE] && !CableLaunched
       && (form == SPOINGFORM && testGroundCollisions ()))
     /* /manageCollisions(1, EVENT_DOWN, (int)player.x, (int)player.y+player.h, player.w, (int)player.dy+1+agrandissement))) */
     {
       j = (int) player.y + CANNONH - 4;
 
-      /* On cherche le point d'accroche gauche, en parcourant la ligne gauche jusqu'à rencontrer une collision */
+      /* [GT] Look for the section of left hooks, crossing the left line to meet a collision */
       i = (int) player.x / width * width;
       while (getCollision (i, j) == COL_VIDE
              && getCollision (i, j + 4) == COL_VIDE && i > 0)
         i -= width;
-      /* On cherche le point d'accroche droit, en parcourant la ligne droite jusqu'à rencontrer une collision */
+      /* [GT] Search for the right hook point by browsing the straight line to meet a collision */
       k = ((int) player.x + player.w) / width * width;
       while (getCollision (k, j) == COL_VIDE
              && getCollision (k, j + 4) == COL_VIDE && k < X)
         k += width;
 
-      /* Si on a bien les 2 points d'accroche (possibilité d'accrocher le cable), on accroche le cable */
+      /* [GT] If it has 2 attachment points (possibility to hook the cable), we hang the cable */
       if (getCollision (i, j) == COL_NORMAL
           && getCollision (k, j) == COL_NORMAL)
         {
@@ -1134,17 +1134,17 @@ manageEvents ()
 
     }
 
-  /* Si on demande à lancer le cable, que ce dernier n'est pas encore lancé et que l'on est sur un sol quelconque */
+  /* [GT] If asked to run the cable, the latter has not yet started and that one is on any ground */
   if (event[EVENT_PRESSEDCABLE] && !CableLaunched && (form == SPHEREFORM))
     {
       j = (int) (player.y) / height * height;
 
-      /* On cherche le point d'accroche gauche, en parcourant la ligne gauche jusqu'à rencontrer une collision */
+      /* [GT] Search for the point of left hooks, crossing the left line to meet a collision */
       i = ((int) player.x + player.w / 2) / width * width;
       while (getCollision (i, j) == COL_VIDE && j > 0)
         j -= height;
 
-      /* Si on a bien les 2 points d'accroche (possibilité d'accrocher le cable), on accroche le cable */
+      /* [GT] If it has 2 attachment points (possibility to hook the cable), we hang the cable */
       if (getCollision (i, j) == COL_NORMAL)
         {
           XCable = player.x + player.w / 2;
@@ -1157,21 +1157,21 @@ manageEvents ()
         playSound (5);
     }
 
-  /* Si on lache la touche cable, on lache le cable */
+  /* [GT] If we loose the cable button on the loose cable */
   if (!event[EVENT_CABLE])
     CableLaunched = 0;
 
-  /* On change la vitesse selon le deplacement voulu */
+  /* [GT] We change the speed according to the desired displacement */
   if (event[EVENT_RIGHT])
     player.dx += (player.ax * (float) delta_time) / (float) 1024;
 
   if (event[EVENT_LEFT])
     player.dx -= (player.ax * (float) delta_time) / (float) 1024;
 
-  /* iminue la taille du spoing si demandé et si possible (si on peut encore la diminuer) */
+  /* [GT] Decreases the size of Spoing if requested and if possible (if we can still decrease) */
   if (event[EVENT_DOWN] && player.h > SPOINGHMIN && form == SPOINGFORM)
     {
-      /* Si le cable n'est pas lancé, on change la taille et l'ordonnée du spoing */
+      /* [GT] If the cable is not running, the size and changing ordinate the Spoing */
       if (!CableLaunched && !testDownCollisions ())
         {
           agrandissement = 0;
@@ -1184,7 +1184,7 @@ manageEvents ()
               player.y++;
             }
         }
-      /* Si le cable est lancé, on change juste la taille */
+      /* [GT] If the cable is run, it just changes the size */
       else
         {
           agrandissement = 0;
@@ -1198,11 +1198,11 @@ manageEvents ()
         }
     }
 
-  /* Agrandit la taille du spoing si demandé et si possible (si il n'y a pas de collision) */
+  /* [GT] Increases the size of Spoing if requested and if possible (if there is no collision */
   if (event[EVENT_UP] && form == SPOINGFORM)
     {
-      /* Si le cable n'est pas lancé et qu'il n'y a pas de collisions, 
-         on change la taille et l'ordonnée du spoing */
+      /* [GT] If the cable is not running and there are no collisions,
+         changing the size and the ordinate of the Spoing */
       if (!CableLaunched && testGroundCollisions ())    /* manageCollisions(1, EVENT_DOWN, (int)player.x, (int)player.y+player.h, player.w, (int)player.dy+1+agrandissement)==1) */
         {
           agrandissement = 0;
@@ -1213,8 +1213,8 @@ manageEvents ()
               player.y--;
             }
         }
-      /* Si le cable est lancé et qu'il n'y a pas de collisions,  */
-      /* on change juste l'ordonnée du spoing */
+      /* [GT] If the cable is running and there are no collisions,
+         it just changes the ordinate of the Spoing */
       else
         {
           agrandissement = 0;
@@ -1228,7 +1228,7 @@ manageEvents ()
 
   agrandissement = 0;
 
-  /* Charge le saut : augmente ce dernier tant que la touche bas est appuyée
+  /* [GT] Load the jump: it increases as the key is pressed down
    * */
   if (event[EVENT_DOWN] && player.h < SPOINGH && !CableLaunched
       && form == SPOINGFORM && testGroundCollisions ())
@@ -1250,11 +1250,11 @@ manageEvents ()
         }
     }
 
-  /* Si le changement de taille du spoing n'est pas sollicité,
-     On le fait revenir à la normale */
+  /* [GT] If the Spoing the size change is not stressed,
+     It does return to normal */
   if (!event[EVENT_UP] && !event[EVENT_DOWN] && form == SPOINGFORM)
     {
-      /* Si la taille est trop grande, on la réduit */
+      /* [GT] If the size is too small, it expands */
       if (player.h > SPOINGH)
         {
           if (CableLaunched)
@@ -1263,7 +1263,7 @@ manageEvents ()
                 player.h--;
             }
           else
-            /* Si le cable n'est pas lancé et que le spoing n'est pas bloqué, on change l'ordonnee */
+            /* [GT] If the cable is not running and the spotting is not blocked, it changes the orderly */
             {
               if (!testDownCollisions ())
                 {
@@ -1276,17 +1276,17 @@ manageEvents ()
             }
         }
 
-      /* Si la taille est trop petite, on l'agrandit */
+      /* [GT] If the size is too small, it expands */
       if (player.h < SPOINGH)
         {
-          /* Si le cable est lancé, et qu'il n'y a pas de collision, on agrandit la taille */
+          /* [GT] If the cable is run, and there is no collision, it magnifies */
           if (CableLaunched)    /* !manageCollisions(1, EVENT_DOWN, (int)player.x,(int)player.y+player.h, player.w, (int)player.dy+1+agrandissement)) */
             {
               if (!testDownCollisions ())
                 player.h++;
             }
           else
-            /* Si le cable n'est pas lancé, et qu'il n'y a pas de collision, on agrandit la taille et l'ordonnée */
+            /* [GT] If the cable is not running and there is no collision, it magnifies and the y */
             {
               if (!testUpCollisions ())
                 {
@@ -1297,7 +1297,7 @@ manageEvents ()
         }
     }
 
-  /* Si la touche bas est lachée et que le spoing est sur le sol, on lance la force de saut */
+  /* [GT] If the down key is released and the Spoing is on the ground, we launch the jump force */
   if (!event[EVENT_DOWN] && testGroundCollisions () && player.h < SPOINGH && form == SPOINGFORM)        /* manageCollisions(1, EVENT_DOWN, (int)player.x, (int)player.y+player.h, player.w, (int)player.dy+1+agrandissement) && player.h<SPOINGH && form==SPOINGFORM) */
     {
       player.dy -= ((float) saut * (float) delta_time) / (float) 1024;
@@ -1309,7 +1309,7 @@ manageEvents ()
   if (form == SPHEREFORM && event[EVENT_UP] && testGroundCollisions ()) /* manageCollisions(1, EVENT_DOWN, (int)player.x, (int)player.y+player.h, player.w, (int)player.dy+1)) */
     player.dy -= (float) (AY / 2) * (float) delta_time / (float) 1024;
 
-  /* Si il y a collision alors que la vitesse est non nulle, on inverse cette dernière et on multiplie par l'amortissement */
+  /* [GT] If there is a collision while the speed is not zero, is reversed and it is multiplied by amortization */
   if (player.dx < 0 && testLeftCollisions ())   /* manageCollisions(1, EVENT_LEFT, (int)player.x, (int)player.y, (int)player.dx-1, player.h)!=0) */
     {
       player.dx =
@@ -1340,11 +1340,11 @@ manageEvents ()
         playSound (3);
     }
 
-  /* On ajoute la gravité... */
+  /* [GT] Added gravity ... */
   if (!testGroundCollisions ()) /* manageCollisions(1, EVENT_DOWN, (int)player.x, (int)player.y+player.h, player.w, (int)player.dy+1+agrandissement)==0) */
     player.dy += ((float) GRAVITY * (float) delta_time / (float) 1024);
 
-  /* On ajouteFX; les frottements de l'air */
+  /* [GT] We ajouteFX(?); the air friction */
   player.dx *= (float) FX *(float) delta_time / (float) 1024;
   player.dy *= (float) FY *(float) delta_time / (float) 1024;
   /*
@@ -1352,18 +1352,18 @@ manageEvents ()
      if (fabs(player.dy)<GRAVITY*5/10) player.dy=0;
    */
 
-  /* Si le cable est lancé, il n'y pas de vitesse verticale... */
+  /* [GT] If the cable is running, there is no vertical speed ... */
   if (CableLaunched && form == SPOINGFORM)
     player.dy = 0;
 
-  /* On change les coordonnées du spoing en fonction des vitesses */
+  /* [GT] We change the Spoing coordinates based on speed */
   player.x += (int) player.dx;
   player.y += (int) player.dy;
 
   if (CableLaunched && form == SPHEREFORM)
     moveRope ();
 
-  /* Gestion du playerShoot */
+  /* [GT] Management: playerShoot */
   int flag_playerShoot = 1;
   static int waitplayerShoot = 0;
   if (event[EVENT_TIR]
@@ -1371,7 +1371,7 @@ manageEvents ()
     {
       if (player.ammo > 0)
         {
-          /* Permet de ralenplayerShoot un peu la cadence de playerShoot par rapport aux fps... */
+          /* [GT] Lets ralenplayerShoot a bit of pace compared to playerShoot FPS... */
           if (waitplayerShoot >= 5)
             {
               playSound (0);
@@ -1405,7 +1405,7 @@ manageEvents ()
   int FireSpeed =
     (int) ((float) FIRESPEED * (float) delta_time / (float) 1024);
 
-  /* Gestion des collisions des playerShoots du spoing sur un ennemi */
+  /* [GT] Management Spoing playerShoots of collisions on an enemy */
   for (i = 0; i < NBSHOOTS; i++)
     if (playerShoot[i].state)
       for (j = 0; j < NBENNEMYS; j++)

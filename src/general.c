@@ -217,7 +217,7 @@ copyPicture (SDL_Surface * srcS, SDL_Surface * destS, int srcx, int srcy,
 void
 clearSurface (SDL_Surface * surface)
 {
-  //Clear a surface... by filling it with black
+  // Clear a surface... by filling it with black
   SDL_FillRect (surface, NULL, SDL_MapRGB (surface->format, 0, 0, 0));
 }
 
@@ -230,11 +230,11 @@ manageKeys ()
   Uint8 *etat;
   int i;
 
-  //Structure  servant aux événements
+  // [GT] Structure used for events
   SDL_Event event_list;
   SDL_PumpEvents ();
 
-  //Récupére un tableau contenant l'état des touches (enfoncées ou non)
+  // [GT] Retrieve an array containing the state of the keys (pressed or not)
   etat = SDL_GetKeyState (NULL);
 
   for (i = 0; i < 100; i++)
@@ -274,17 +274,17 @@ manageKeys ()
     event[EVENT_DOWN] = 1;
 
 
-  //Gestion des événements
+  // [GT] Event Management
   while (SDL_PollEvent (&event_list))
     {
       switch (event_list.type)
         {
-          //Si appel à quitter
+          // [GT] If wanting to leave
         case SDL_QUIT:
           event[EVENT_QUIT] = 1;
           break;
 
-          //si touche enfoncée
+          // [GT] If pressed
         case SDL_KEYDOWN:
           switch (event_list.key.keysym.sym)
             {
