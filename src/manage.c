@@ -247,7 +247,7 @@ manageHiScores (int update)
                            100 + i * TTF_FontLineSkip (TTFfontmenu2), 80, 80,
                            255);
           sprintf (buffer, "%.8d", HiScore[i].score);
-          printTextShaded (screen, TTFfontmenu2, buffer, 380,
+          printTextShaded (screen, TTFfontmenu2, buffer, (X / 3) * 2,
                            100 + i * TTF_FontLineSkip (TTFfontmenu2), 80, 80,
                            255);
         }

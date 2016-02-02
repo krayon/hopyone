@@ -99,6 +99,12 @@ saveHighScores ()
   int i;
 
   file = fopen (REP_SAVE "hiscores.dat", "wb");
+  if (file == NULL)
+    {
+      fprintf(stderr, "scores.c/saveHighScores()"
+              "fopen() failed");
+      return;
+    }
 
   for (i = 0; i < 10; i++)
     fprintf (file, "%d %s\n", HiScore[i].score, HiScore[i].name);
